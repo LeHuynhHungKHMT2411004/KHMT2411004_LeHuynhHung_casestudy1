@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'transaction_screens.dart';
 
 void main() {
   runApp(const MyApp());
@@ -103,14 +104,14 @@ class ExpenseManagerPage extends StatelessWidget {
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff1976D2),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(9),
-                    ),
-                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddTransactionScreen(),
+                      ),
+                    );
+                  },
                   child: const Text(
                     'Bắt đầu',
                     style: TextStyle(
