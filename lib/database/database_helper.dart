@@ -168,4 +168,66 @@ class DatabaseHelper {
       whereArgs: [id],
     );
   }
+  Future<List<Map<String, dynamic>>> getCategoriesByType(
+      String type,
+      ) async {
+    final db = await database;
+
+    return await db.query(
+      'categories',
+      where: 'type = ?',
+      whereArgs: [type],
+      orderBy: 'name ASC',
+    );
+  }
+  Future<List<Map<String, dynamic>>> getTransactionsWithCategory() async {
+    final db = await database;
+
+    return await db.rawQuery('''
+    SELECT
+      t.*,
+      c.name AS category_name,
+      c.icon AS category_icon,
+      c.color AS category_color
+    FROM transactions t
+    INNER JOIN categories c
+      ON t.category_id = c.id
+    ORDER BY t.date DESC, t.id DESC
+  ''');
+  }
+  Future<double> getTotalIncome() async {
+    final db = await database;
+
+    final result = await db.rawQuery('''
+    SELECT SUM(amount) AS total
+    FROM transactions
+    WHERE type = 'income'
+  ''');
+
+    final value = result.first['total'];
+
+    if (value == null) {
+      return 0;
+    }
+
+    return (value as num).toDouble();
+  }
+  Future<double> getTotalExpense() async {
+    final db = await database;
+
+    final result = await db.rawQuery('''
+    SELECT SUM(amount) AS total
+    FROM transactions
+    WHERE type = 'expense'
+  ''');
+
+    final value = result.first['total'];
+
+    if (value == null) {
+      return 0;
+    }
+
+    return (value as num).toDouble();
+  }
+
 }
